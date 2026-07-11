@@ -6,6 +6,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
+  previewFeatures = ["fullTextSearchPostgres"]
 }
 
 // Define database connection via the `DATABASE_URL` env var
