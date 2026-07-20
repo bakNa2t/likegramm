@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { signup } from "./actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, SignUpValues } from "@/lib/validations";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export const SignupForm = () => {
   const [error, setError] = useState<string>();
@@ -51,7 +52,8 @@ export const SignupForm = () => {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Username" {...field} />
+                <PasswordInput placeholder="Password" {...field} />
+                {/* <Input placeholder="Username" {...field} /> */}
               </FormControl>
               <FormMessage />
             </FormItem>
