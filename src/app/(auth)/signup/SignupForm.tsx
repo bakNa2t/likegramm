@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -12,12 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/LoadingButton";
+import { PasswordInput } from "@/components/PasswordInput";
 
 import { signup } from "./actions";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, SignUpValues } from "@/lib/validations";
-import { PasswordInput } from "@/components/PasswordInput";
 
 export const SignupForm = () => {
   const [error, setError] = useState<string>();
@@ -88,9 +88,9 @@ export const SignupForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
+        <LoadingButton isLoading={isPending} type="submit" className="w-full">
           Create account
-        </Button>
+        </LoadingButton>
       </form>
     </Form>
   );
