@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { UserButton } from "@/components/UserButton";
+
 export const Navbar = () => {
   return (
     <header className="sticky top-0 z-10 bg-card shadow-sm">
@@ -7,6 +9,8 @@ export const Navbar = () => {
         <Link href="/" className="text-2xl font-bold text-primary">
           Likegramm
         </Link>
+
+        <UserButton />
       </div>
     </header>
   );
