@@ -17,6 +17,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { UserAvatar } from "./UserAvatar";
 
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
