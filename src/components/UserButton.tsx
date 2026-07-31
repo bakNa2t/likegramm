@@ -21,7 +21,7 @@ import { UserAvatar } from "./UserAvatar";
 
 import { cn } from "@/lib/utils";
 import { logout } from "@/app/(auth)/actions";
-import { useSession } from "@/app/(main)/SessionProvider";
+import { useSession } from "@/app/(main)/components/SessionProvider";
 
 interface UserButtonProps {
   className?: string;
