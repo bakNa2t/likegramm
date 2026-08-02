@@ -1,7 +1,9 @@
+import { PostEditor } from "@/components/posts/editor/PostEditor";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Front page
+      <PostEditor />
     </main>
   );
 }
