@@ -3,17 +3,11 @@ import prisma from "@/lib/prisma";
 import { Post } from "@/components/posts/Post";
 import { PostEditor } from "@/components/posts/editor/PostEditor";
 
+import { PostData, postDataInclude } from "@/lib/types";
+
 const Home = async () => {
   const posts = await prisma.post.findMany({
-    include: {
-      user: {
-        select: {
-          username: true,
-          displayName: true,
-          avatarUrl: true,
-        },
-      },
-    },
+    include: postDataInclude,
     orderBy: {
       createdAt: "desc",
     },
@@ -21,11 +15,13 @@ const Home = async () => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <PostEditor />
+      <div className="w-full min-w-0 space-y-5">
+        <PostEditor />
 
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+        {posts.map((post: PostData) => (
+          <Post key={post.id} post={post} />
+        ))}
+      </div>
     </main>
   );
 };
