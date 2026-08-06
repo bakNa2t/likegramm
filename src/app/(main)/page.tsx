@@ -4,6 +4,7 @@ import { Post } from "@/components/posts/Post";
 import { PostEditor } from "@/components/posts/editor/PostEditor";
 
 import { PostData, postDataInclude } from "@/lib/types";
+import { TrendsSidebar } from "@/components/TrendsSidebar";
 
 const Home = async () => {
   const posts = await prisma.post.findMany({
@@ -22,6 +23,8 @@ const Home = async () => {
           <Post key={post.id} post={post} />
         ))}
       </div>
+
+      <TrendsSidebar />
     </main>
   );
 };
