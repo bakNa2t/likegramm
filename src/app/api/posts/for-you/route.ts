@@ -15,6 +15,8 @@ export const GET = async () => {
       include: postDataInclude(user.id),
       orderBy: { createdAt: "desc" },
     });
+
+    return Response.json(posts);
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Internal server error" }, { status: 500 });

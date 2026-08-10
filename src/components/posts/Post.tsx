@@ -3,7 +3,7 @@ import Link from "next/link";
 import { UserAvatar } from "../UserAvatar";
 
 import { PostData } from "@/lib/types";
-import { formatRelativeDate } from "@/lib/utils";
+// import { formatRelativeDate } from "@/lib/utils";
 
 interface PostProps {
   post: PostData;
@@ -30,7 +30,7 @@ export const Post = ({ post }: PostProps) => {
             className="block text-sm text-muted-foreground hover:underline"
             suppressHydrationWarning
           >
-            {formatRelativeDate(post.createdAt)}
+            {/* {formatRelativeDate(post.createdAt)} */}
           </Link>
         </div>
       </div>
