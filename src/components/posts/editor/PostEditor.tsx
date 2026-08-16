@@ -4,11 +4,11 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 
-import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/UserAvatar";
+import { LoadingButton } from "@/components/LoadingButton";
 
 import { cn } from "@/lib/utils";
-import { submitPost } from "./actions";
+import { useSubmitPostMutation } from "./mutations";
 import { useSession } from "@/app/(main)/components/SessionProvider";
 
 import "./styles.css";
@@ -17,6 +17,8 @@ export const PostEditor = () => {
   const { user } = useSession();
 
   const isDragActive = false;
+
+  const mutation = useSubmitPostMutation();
 
   const editor = useEditor({
     extensions: [
@@ -35,9 +37,12 @@ export const PostEditor = () => {
       blockSeparator: "\n",
     }) || "";
 
-  const onSubmit = async () => {
-    await submitPost(input);
-    editor?.commands.clearContent();
+  const onSubmit = () => {
+    mutation.mutate(input, {
+      onSuccess: () => {
+        editor?.commands.clearContent();
+      },
+    });
   };
 
   return (
@@ -54,13 +59,14 @@ export const PostEditor = () => {
       </div>
 
       <div className="flex justify-end">
-        <Button
+        <LoadingButton
           onClick={onSubmit}
+          isLoading={mutation.isPending}
           disabled={!input.trim()}
           className="min-w-20"
         >
           Post
-        </Button>
+        </LoadingButton>
       </div>
     </div>
   );
