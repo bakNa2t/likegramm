@@ -38,6 +38,15 @@ export const useSubmitPostMutation = () => {
           }
         },
       );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFilter.queryKey,
+        predicate(query) {
+          return !query.state.data;
+        },
+      });
+
+      toast.success("Comment created");
     },
     onError: (error) => {
       console.error("Error submitting post:", error);
