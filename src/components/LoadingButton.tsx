@@ -6,6 +6,14 @@ import { cn } from "@/lib/utils";
 interface LoadingButtonProps extends React.ComponentProps<"button"> {
   isLoading: boolean;
   children: React.ReactNode;
+  variant?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null;
 }
 
 export const LoadingButton = ({
@@ -13,10 +21,12 @@ export const LoadingButton = ({
   children,
   disabled,
   className,
+  variant,
   ...props
 }: LoadingButtonProps) => {
   return (
     <Button
+      variant={variant}
       className={cn("flex items-center gap-2", className)}
       disabled={isLoading || disabled}
       {...props}

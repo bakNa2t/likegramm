@@ -8,9 +8,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import deletePost from "./actions";
-import { PostData, PostsPage } from "@/lib/types";
+import { PostsPage } from "@/lib/types";
 
-export const useDeletePostMutation = (post: PostData) => {
+export const useDeletePostMutation = () => {
   const queryClient = useQueryClient();
 
   const router = useRouter();
