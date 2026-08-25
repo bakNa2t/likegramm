@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 import { Loader2 } from "lucide-react";
 
-import { Button } from "./ui/button";
+import { FollowButton } from "./FollowButton";
 import { UserAvatar } from "./UserAvatar";
 
 import prisma from "@/lib/prisma";
@@ -50,7 +50,7 @@ const ToFollow = async () => {
               </div>
             </Link>
 
-            <Button>Follow</Button>
+            <FollowButton userId={user.id} initialState={user.followerInfo} />
           </div>
         ))}
       </div>
