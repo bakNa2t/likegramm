@@ -9,7 +9,7 @@ import { UserAvatar } from "./UserAvatar";
 import prisma from "@/lib/prisma";
 import { validateRequest } from "@/auth";
 import { formatNumber } from "@/lib/utils";
-import { userDataSelect } from "@/lib/types";
+import { getUserDataSelect } from "@/lib/types";
 
 const ToFollow = async () => {
   const { user } = await validateRequest();
@@ -22,7 +22,7 @@ const ToFollow = async () => {
         id: user.id,
       },
     },
-    select: userDataSelect(user.id),
+    select: getUserDataSelect(user.id),
     take: 5,
   });
 
@@ -50,7 +50,16 @@ const ToFollow = async () => {
               </div>
             </Link>
 
-            <FollowButton userId={user.id} initialState={user.followerInfo} />
+            <FollowButton
+              userId={user.id}
+              initialState={{
+                followers: user._count.followers,
+                isFollowedByUser: user.followers.some(
+                  ({ followerId }: { followerId: string }) =>
+                    followerId === user.id,
+                ),
+              }}
+            />
           </div>
         ))}
       </div>
