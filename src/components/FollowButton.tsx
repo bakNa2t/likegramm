@@ -1,3 +1,5 @@
+"use client";
+
 import kyInstance from "@/lib/ky";
 import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 
