@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 
 import { FollowerInfo } from "@/lib/types";
 import useFollowerInfo from "@/hooks/useFollowerInfo";
+import { toast } from "sonner";
 
 interface FollowButtonProps {
   userId: string;
@@ -36,6 +37,13 @@ export const FollowButton = ({ userId, initialState }: FollowButtonProps) => {
           (previousState?.isFollowedByUser ? -1 : 1),
         isFollowedByUser: !previousState?.isFollowedByUser,
       }));
+
+      return { previousState };
+    },
+    onError(error, variables, context) {
+      queryClient.setQueryData(queryKey, context?.previousState);
+      console.error(error);
+      toast.error("An error occurred while following/unfollowing.");
     },
   });
 
