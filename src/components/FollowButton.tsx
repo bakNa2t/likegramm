@@ -48,7 +48,10 @@ export const FollowButton = ({ userId, initialState }: FollowButtonProps) => {
   });
 
   return (
-    <Button variant={data.isFollowedByUser ? "secondary" : "default"}>
+    <Button
+      variant={data.isFollowedByUser ? "secondary" : "default"}
+      onClick={() => mutate()}
+    >
       {data.isFollowedByUser ? "Unfollow" : "Follow"}
     </Button>
   );
