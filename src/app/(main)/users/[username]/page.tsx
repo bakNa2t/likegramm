@@ -4,8 +4,11 @@ import { notFound } from "next/navigation";
 import { validateRequest } from "@/auth";
 import { formatDate } from "date-fns";
 
+import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/UserAvatar";
+import { FollowButton } from "@/components/FollowButton";
 import { TrendsSidebar } from "@/components/TrendsSidebar";
+import { FollowerCount } from "@/components/FollowerCount";
 
 import prisma from "@/lib/prisma";
 import { formatNumber } from "@/lib/utils";
@@ -105,9 +108,25 @@ const UserProfile = async ({ user, loggedInUserId }: UserProfileProps) => {
                 {formatNumber(user._count.posts)}
               </span>
             </span>
+
+            <FollowerCount userId={user.id} initialState={followerInfo} />
           </div>
         </div>
+
+        {user.id === loggedInUserId ? (
+          <Button>Edit profile</Button>
+        ) : (
+          <FollowButton userId={user.id} initialState={followerInfo} />
+        )}
       </div>
+      {user.bio && (
+        <>
+          <hr />
+          <div className="overflow-hidden whitespace-pre-line wrap-break-word">
+            {user.bio}
+          </div>
+        </>
+      )}
     </div>
   );
 };
