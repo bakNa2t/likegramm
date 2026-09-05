@@ -9,6 +9,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { FollowButton } from "@/components/FollowButton";
 import { TrendsSidebar } from "@/components/TrendsSidebar";
 import { FollowerCount } from "@/components/FollowerCount";
+import { UserPostsFeed } from "../../components/UserPostsFeed";
 
 import prisma from "@/lib/prisma";
 import { formatNumber } from "@/lib/utils";
@@ -65,6 +66,13 @@ const Page = async ({ params: { username } }: PageProps) => {
     <main className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-5">
         <UserProfile user={user} loggedInUserId={loggedInUser.id} />
+
+        <div className="rounded-2xl bg-card p-5 shadow-sm">
+          <h2 className="text-center text-2xl font-bold">
+            {user.displayName}&apos;s posts
+          </h2>
+        </div>
+        <UserPostsFeed userId={user.id} />
       </div>
       <TrendsSidebar />
     </main>
