@@ -19,7 +19,7 @@ export const useSubmitPostMutation = () => {
     mutationFn: submitPost,
 
     onSuccess: async (newPost) => {
-      const queryFilter: QueryFilters = {
+      const queryFilter = {
         queryKey: ["post-feed"],
         predicate(query) {
           return (
@@ -28,7 +28,7 @@ export const useSubmitPostMutation = () => {
               query.queryKey.includes(user.id))
           );
         },
-      };
+      } satisfies QueryFilters;
 
       await queryClient.cancelQueries(queryFilter);
 
@@ -55,7 +55,7 @@ export const useSubmitPostMutation = () => {
       queryClient.invalidateQueries({
         queryKey: queryFilter.queryKey,
         predicate(query) {
-          return !query.state.data;
+          return queryFilter.predicate(query) && !query.state.data;
         },
       });
 

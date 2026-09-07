@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 
+import { Linkify } from "../Linkify";
 import { UserAvatar } from "../UserAvatar";
+import { PostMoreButton } from "./PostMoreButton";
 
 import { PostData } from "@/lib/types";
 import { formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/components/SessionProvider";
-import { PostMoreButton } from "./PostMoreButton";
 
 interface PostProps {
   post: PostData;
@@ -49,7 +50,11 @@ export const Post = ({ post }: PostProps) => {
           />
         )}
       </div>
-      <div className="whitespace-pre-line wrap-break-word">{post.content}</div>
+      <Linkify>
+        <div className="whitespace-pre-line wrap-break-word">
+          {post.content}
+        </div>
+      </Linkify>
     </article>
   );
 };

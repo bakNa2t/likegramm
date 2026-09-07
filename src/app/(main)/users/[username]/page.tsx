@@ -5,6 +5,7 @@ import { validateRequest } from "@/auth";
 import { formatDate } from "date-fns";
 
 import { Button } from "@/components/ui/button";
+import { Linkify } from "@/components/Linkify";
 import { UserAvatar } from "@/components/UserAvatar";
 import { FollowButton } from "@/components/FollowButton";
 import { TrendsSidebar } from "@/components/TrendsSidebar";
@@ -130,9 +131,11 @@ const UserProfile = async ({ user, loggedInUserId }: UserProfileProps) => {
       {user.bio && (
         <>
           <hr />
-          <div className="overflow-hidden whitespace-pre-line wrap-break-word">
-            {user.bio}
-          </div>
+          <Linkify>
+            <div className="overflow-hidden whitespace-pre-line wrap-break-word">
+              {user.bio}
+            </div>
+          </Linkify>
         </>
       )}
     </div>
