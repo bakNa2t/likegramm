@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Linkify } from "../Linkify";
 import { UserAvatar } from "../UserAvatar";
+import { UserTooltip } from "../UserTooltip";
 import { PostMoreButton } from "./PostMoreButton";
 
 import { PostData } from "@/lib/types";
@@ -21,17 +22,21 @@ export const Post = ({ post }: PostProps) => {
     <article className="group/post space-y-3 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex justify-between gap-3">
         <div className="flex flex-wrap gap-3">
-          <Link href={`/users/${post.user.username}`}>
-            <UserAvatar avatarUrl={post.user.avatarUrl} />
-          </Link>
+          <UserTooltip user={post.user}>
+            <Link href={`/users/${post.user.username}`}>
+              <UserAvatar avatarUrl={post.user.avatarUrl} />
+            </Link>
+          </UserTooltip>
 
           <div>
-            <Link
-              href={`/users/${post.user.username}`}
-              className="block font-medium hover:underline"
-            >
-              {post.user.displayName}
-            </Link>
+            <UserTooltip user={post.user}>
+              <Link
+                href={`/users/${post.user.username}`}
+                className="block font-medium hover:underline"
+              >
+                {post.user.displayName}
+              </Link>
+            </UserTooltip>
 
             <Link
               href={`/posts/${post.id}`}
