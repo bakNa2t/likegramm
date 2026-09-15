@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 import { validateRequest } from "@/auth";
 import { formatDate } from "date-fns";
 
-import { Button } from "@/components/ui/button";
 import { Linkify } from "@/components/Linkify";
 import { UserAvatar } from "@/components/UserAvatar";
 import { FollowButton } from "@/components/FollowButton";
 import { TrendsSidebar } from "@/components/TrendsSidebar";
 import { FollowerCount } from "@/components/FollowerCount";
 import { UserPostsFeed } from "../../components/UserPostsFeed";
+import { EditProfileButton } from "../../components/EditProfileButton";
 
 import prisma from "@/lib/prisma";
 import { formatNumber } from "@/lib/utils";
@@ -123,7 +123,7 @@ const UserProfile = async ({ user, loggedInUserId }: UserProfileProps) => {
         </div>
 
         {user.id === loggedInUserId ? (
-          <Button>Edit profile</Button>
+          <EditProfileButton user={user} />
         ) : (
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
