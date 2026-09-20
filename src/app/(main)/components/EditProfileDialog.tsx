@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
+import { Camera } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
 import { Form, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Camera } from "lucide-react";
+import Resizer from "react-image-file-resizer";
 
 import {
   Dialog,
@@ -56,12 +57,18 @@ export const EditProfileDialog = ({
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
 
   const onSubmit = async (values: UpdateUserProfileValues) => {
+    const newAvatarFile = croppedAvatar
+      ? new File([croppedAvatar], `avatar_${user.id}.webp`)
+      : undefined;
+
     mutation.mutate(
       {
         values,
+        avatar: newAvatarFile,
       },
       {
         onSuccess: () => {
+          setCroppedAvatar(null);
           onOpenChange(false);
         },
       },
@@ -145,6 +152,17 @@ const AvatarInput: React.FC<AvatarInputProps> = ({ src, onImageCropped }) => {
 
   const onImageSelected = (image: File | undefined) => {
     if (!image) return;
+
+    Resizer.imageFileResizer(
+      image,
+      1024,
+      1024,
+      "WEBP",
+      100,
+      0,
+      (uri) => setImageToCrop(uri as File),
+      "file",
+    );
   };
 
   return (
