@@ -56,4 +56,35 @@ export const useMediaUpload = () => {
       toast(`Upload failed: ${e.message}`, { duration: 5000 });
     },
   });
+
+  const handleStartUpload = (files: File[]) => {
+    if (isUploading) {
+      toast("Upload in progress. Please wait.");
+      return;
+    }
+
+    if (attachments.length + files.length > 5) {
+      toast("You can only upload up to 5 attachments.");
+      return;
+    }
+    startUpload(files);
+  };
+
+  const removeAttachment = (fileName: string) => {
+    setAttachments((prev) => prev.filter((a) => a.file.name !== fileName));
+  };
+
+  const reset = () => {
+    setAttachments([]);
+    setUploadProgress(undefined);
+  };
+
+  return {
+    startUpload: handleStartUpload,
+    attachments,
+    isUploading,
+    uploadProgress,
+    removeAttachment,
+    reset,
+  };
 };
