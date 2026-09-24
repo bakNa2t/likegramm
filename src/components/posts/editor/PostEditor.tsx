@@ -1,13 +1,17 @@
 "use client";
 
+import { useRef } from "react";
+import { ImageIcon } from "lucide-react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorContent, useEditor } from "@tiptap/react";
 
+import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/UserAvatar";
 import { LoadingButton } from "@/components/LoadingButton";
 
 import { cn } from "@/lib/utils";
+import { useMediaUpload } from "./useMediaUpload";
 import { useSubmitPostMutation } from "./mutations";
 import { useSession } from "@/app/(main)/components/SessionProvider";
 
@@ -19,6 +23,15 @@ export const PostEditor = () => {
   const isDragActive = false;
 
   const mutation = useSubmitPostMutation();
+
+  const {
+    startUpload,
+    attachments,
+    isUploading,
+    uploadProgress,
+    removeAttachment,
+    reset: resetMediaUploads,
+  } = useMediaUpload();
 
   const editor = useEditor({
     extensions: [
@@ -38,11 +51,18 @@ export const PostEditor = () => {
     }) || "";
 
   const onSubmit = () => {
-    mutation.mutate(input, {
-      onSuccess: () => {
-        editor?.commands.clearContent();
+    mutation.mutate(
+      {
+        content: input,
+        mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
       },
-    });
+      {
+        onSuccess: () => {
+          editor?.commands.clearContent();
+          resetMediaUploads();
+        },
+      },
+    );
   };
 
   return (
@@ -58,7 +78,11 @@ export const PostEditor = () => {
         />
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-3 items-center">
+        <AddAttachmentsButton
+          onFilesSelected={startUpload}
+          disabled={isUploading || attachments.length >= 5}
+        />
         <LoadingButton
           onClick={onSubmit}
           isLoading={mutation.isPending}
@@ -69,5 +93,45 @@ export const PostEditor = () => {
         </LoadingButton>
       </div>
     </div>
+  );
+};
+
+interface AddAttachmentsButtonProps {
+  onFilesSelected: (files: File[]) => void;
+  disabled: boolean;
+}
+
+const AddAttachmentsButton = ({
+  onFilesSelected,
+  disabled,
+}: AddAttachmentsButtonProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="text-primary hover:text-primary"
+        disabled={disabled}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <ImageIcon size={20} />
+      </Button>
+      <input
+        type="file"
+        accept="image/*, video/*"
+        multiple
+        ref={fileInputRef}
+        className="sr-only hidden"
+        onChange={(e) => {
+          const files = Array.from(e.target.files || []);
+          if (files.length) {
+            onFilesSelected(files);
+            e.target.value = "";
+          }
+        }}
+      />
+    </>
   );
 };
