@@ -1,3 +1,4 @@
+// @ts-expect-error Type mismatch when importing Prisma type from @prisma/client
 import { Prisma } from "@prisma/client";
 
 export const getUserDataSelect = (loggedInUserId: string) => {
@@ -34,6 +35,7 @@ export const getPostDataInclude = (loggedInUserId: string) => {
     user: {
       select: getUserDataSelect(loggedInUserId),
     },
+    attachments: true,
   } satisfies Prisma.PostInclude;
 };
 
