@@ -13,6 +13,7 @@ import { PostMoreButton } from "./PostMoreButton";
 import { PostData } from "@/lib/types";
 import { cn, formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/components/SessionProvider";
+import { LikeButton } from "./LikeButton";
 
 interface PostProps {
   post: PostData;
@@ -67,6 +68,16 @@ export const Post = ({ post }: PostProps) => {
       {!!post.attachments.length && (
         <MediaPreviews attachments={post.attachments} />
       )}
+      <hr className="text-muted-foreground" />
+      <LikeButton
+        postId={post.id}
+        initialState={{
+          likes: post._count.likes,
+          isLikedByUser: post.likes.some(
+            (like: { userId: string }) => like.userId === user.id,
+          ),
+        }}
+      />
     </article>
   );
 };
