@@ -6,14 +6,15 @@ import Link from "next/link";
 import { Media } from "@prisma/client";
 
 import { Linkify } from "../Linkify";
+import { LikeButton } from "./LikeButton";
 import { UserAvatar } from "../UserAvatar";
 import { UserTooltip } from "../UserTooltip";
+import { BookmarkButton } from "./BookmarkButton";
 import { PostMoreButton } from "./PostMoreButton";
 
 import { PostData } from "@/lib/types";
 import { cn, formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/components/SessionProvider";
-import { LikeButton } from "./LikeButton";
 
 interface PostProps {
   post: PostData;
@@ -69,15 +70,25 @@ export const Post = ({ post }: PostProps) => {
         <MediaPreviews attachments={post.attachments} />
       )}
       <hr className="text-muted-foreground" />
-      <LikeButton
-        postId={post.id}
-        initialState={{
-          likes: post._count.likes,
-          isLikedByUser: post.likes.some(
-            (like: { userId: string }) => like.userId === user.id,
-          ),
-        }}
-      />
+      <div className="flex justify-between gap-5">
+        <LikeButton
+          postId={post.id}
+          initialState={{
+            likes: post._count.likes,
+            isLikedByUser: post.likes.some(
+              (like: { userId: string }) => like.userId === user.id,
+            ),
+          }}
+        />
+        <BookmarkButton
+          postId={post.id}
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              (bookmark: { userId: string }) => bookmark.userId === user.id,
+            ),
+          }}
+        />
+      </div>
     </article>
   );
 };
