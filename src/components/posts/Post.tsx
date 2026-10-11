@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 // @ts-expect-error - The Media type is not explicitly defined in @prisma/client
 import { Media } from "@prisma/client";
+import { MessageSquare } from "lucide-react";
 
 import { Linkify } from "../Linkify";
 import { LikeButton } from "./LikeButton";
 import { UserAvatar } from "../UserAvatar";
 import { UserTooltip } from "../UserTooltip";
+import { Comments } from "../comments/Comments";
 import { BookmarkButton } from "./BookmarkButton";
 import { PostMoreButton } from "./PostMoreButton";
 
@@ -22,6 +25,8 @@ interface PostProps {
 
 export const Post = ({ post }: PostProps) => {
   const { user } = useSession();
+
+  const [showComments, setShowComments] = useState(false);
 
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5 shadow-sm">
@@ -71,15 +76,21 @@ export const Post = ({ post }: PostProps) => {
       )}
       <hr className="text-muted-foreground" />
       <div className="flex justify-between gap-5">
-        <LikeButton
-          postId={post.id}
-          initialState={{
-            likes: post._count.likes,
-            isLikedByUser: post.likes.some(
-              (like: { userId: string }) => like.userId === user.id,
-            ),
-          }}
-        />
+        <div className="flex items-center gap-5">
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post._count.likes,
+              isLikedByUser: post.likes.some(
+                (like: { userId: string }) => like.userId === user.id,
+              ),
+            }}
+          />
+          <CommentButton
+            post={post}
+            onClick={() => setShowComments(!showComments)}
+          />
+        </div>
         <BookmarkButton
           postId={post.id}
           initialState={{
@@ -89,6 +100,8 @@ export const Post = ({ post }: PostProps) => {
           }}
         />
       </div>
+
+      {showComments && <Comments post={post} />}
     </article>
   );
 };
@@ -142,4 +155,20 @@ const MediaPreview = ({ media }: MediaPreviewProps) => {
   }
 
   return <p className="text-destructive">Unsupported media type</p>;
+};
+
+interface CommentButtonProps {
+  post: PostData;
+  onClick: () => void;
+}
+
+const CommentButton = ({ post, onClick }: CommentButtonProps) => {
+  return (
+    <button onClick={onClick} className="flex items-center gap-2">
+      <MessageSquare className="size-5" />
+      <span className="text-sm font-medium tabular-nums">
+        {post._count.comments}{" "}
+      </span>
+    </button>
+  );
 };
