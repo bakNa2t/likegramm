@@ -12,17 +12,17 @@ import { LoadingButton } from "../LoadingButton";
 import { CommentData } from "@/lib/types";
 import { useDeleteCommentMutation } from "./mutations";
 
-interface CommnetDeleteDialogProps {
+interface CommentDeleteDialogProps {
   comment: CommentData;
   open: boolean;
   onClose: () => void;
 }
 
-export const CommnetDeleteDialog = ({
+export const CommentDeleteDialog = ({
   comment,
   open,
   onClose,
-}: CommnetDeleteDialogProps) => {
+}: CommentDeleteDialogProps) => {
   const mutation = useDeleteCommentMutation();
 
   const handleOpenChange = (open: boolean) => {

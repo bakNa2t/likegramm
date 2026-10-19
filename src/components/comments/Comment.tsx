@@ -2,15 +2,19 @@ import Link from "next/link";
 
 import { UserAvatar } from "../UserAvatar";
 import { UserTooltip } from "../UserTooltip";
+import { CommentMoreButton } from "./CommentMoreButton";
 
 import { CommentData } from "@/lib/types";
 import { formatRelativeDate } from "@/lib/utils";
+import { useSession } from "@/app/(main)/components/SessionProvider";
 
 interface CommentProps {
   comment: CommentData;
 }
 
 export const Comment = ({ comment }: CommentProps) => {
+  const { user } = useSession();
+
   return (
     <div className="group/comment flex gap-3 py-3">
       <span className="hidden sm:inline">
@@ -38,6 +42,12 @@ export const Comment = ({ comment }: CommentProps) => {
 
         <div>{comment.content}</div>
       </div>
+      {comment.user.id === user.id && (
+        <CommentMoreButton
+          comment={comment}
+          className="ms-auto opacity-0 transition-opacity group-hover/comment:opacity-100"
+        />
+      )}
     </div>
   );
 };
