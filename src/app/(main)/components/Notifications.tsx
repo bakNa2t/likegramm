@@ -3,6 +3,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
+import { Notification } from "./Notification";
 import { PostsLoadingSkeleton } from "@/components/posts/PostsLoadingSkeleton";
 import { InfiniteScrollContainer } from "@/components/InfiniteScrollContainer";
 
