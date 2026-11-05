@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { generateIdFromEntropySize } from "lucia";
 
 import prisma from "@/lib/prisma";
+import streamServerClient from "@/lib/stream";
 import { signUpSchema, SignUpValues } from "@/lib/validations";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
@@ -55,14 +56,22 @@ export const signup = async (
       };
     }
 
-    await prisma.user.create({
-      data: {
+    // @ts-expect-error - This is intentional
+    await prisma.$transaction(async (tx) => {
+      await tx.user.create({
+        data: {
+          id: userId,
+          username,
+          displayName: username,
+          email,
+          passwordHash,
+        },
+      });
+      await streamServerClient.upsertUser({
         id: userId,
         username,
-        displayName: username,
-        email,
-        passwordHash,
-      },
+        name: username,
+      });
     });
 
     const session = await lucia.createSession(userId, {});
