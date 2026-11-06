@@ -1,13 +1,18 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-
+import { useTheme } from "next-themes";
 import { Chat as StreamChat } from "stream-chat-react";
+
+import { ChatChannel } from "./ChatChannel";
+import { ChatSidebar } from "./ChatSidebar";
 
 import useInitializeChatClient from "../messages/useInitializeChatClient";
 
 export const Chat = () => {
   const chatClient = useInitializeChatClient();
+
+  const { resolvedTheme } = useTheme();
 
   if (!chatClient) {
     return <Loader2 className="mx-auto my-3 animate-spin" />;
@@ -16,7 +21,17 @@ export const Chat = () => {
   return (
     <main className="relative w-full overflow-hidden rounded-2xl bg-card shadow-sm">
       <div className="absolute bottom-0 top-0 flex w-full">
-        <StreamChat client={chatClient} />
+        <StreamChat
+          client={chatClient}
+          theme={
+            resolvedTheme === "dark"
+              ? "str-chat__theme-dark"
+              : "str-chat__theme-light"
+          }
+        >
+          <ChatChannel />
+          <ChatSidebar />
+        </StreamChat>
       </div>
     </main>
   );
