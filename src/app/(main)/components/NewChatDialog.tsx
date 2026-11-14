@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { UserResponse } from "stream-chat";
 import { useQuery } from "@tanstack/react-query";
-import { SearchIcon } from "lucide-react";
+import { Check, SearchIcon } from "lucide-react";
+// @ts-expect-error - This is intentional
 import { DefaultStreamChatGenerics, useChatContext } from "stream-chat-react";
 
 import {
@@ -10,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { UserAvatar } from "@/components/UserAvatar";
 
 import useDebounce from "@/hooks/useDebounce";
 import { useSession } from "./SessionProvider";
@@ -74,8 +76,51 @@ export const NewChatDialog = ({
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
+
+          <div className="h-96 overflow-y-auto">
+            {isSuccess &&
+              data.users.map((user) => (
+                <UserResult
+                  key={user.id}
+                  user={user}
+                  selected={selectedUsers.some((u) => u.id === user.id)}
+                  onClick={() => {
+                    setSelectedUsers((prev) =>
+                      prev.some((u) => u.id === user.id)
+                        ? prev.filter((u) => u.id !== user.id)
+                        : [...prev, user],
+                    );
+                  }}
+                />
+              ))}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
+  );
+};
+
+interface UserResultProps {
+  // @ts-expect-error - This is intentional
+  user: UserResponse<DefaultStreamChatGenerics>;
+  selected: boolean;
+  onClick: () => void;
+}
+
+const UserResult = ({ user, selected, onClick }: UserResultProps) => {
+  return (
+    <button
+      className="flex w-full items-center justify-between px-4 py-2.5 transition-colors hover:bg-muted"
+      onClick={onClick}
+    >
+      <div className="flex items-center gap-2">
+        <UserAvatar avatarUrl={user.image} />
+        <div className="flex flex-col text-start">
+          <p className="font-bold">{user.name}</p>
+          <p className="text-muted-foreground">@{user.username}</p>
+        </div>
+      </div>
+      {selected && <Check className="size-5 text-green-500" />}
+    </button>
   );
 };
