@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserResponse } from "stream-chat";
 import { useQuery } from "@tanstack/react-query";
-import { Check, SearchIcon } from "lucide-react";
+import { Check, SearchIcon, X } from "lucide-react";
 // @ts-expect-error - This is intentional
 import { DefaultStreamChatGenerics, useChatContext } from "stream-chat-react";
 
@@ -77,6 +77,23 @@ export const NewChatDialog = ({
             />
           </div>
 
+          {!!selectedUsers.length && (
+            <div className="mt-4 flex flex-wrap gap-2 p-2">
+              {selectedUsers.map((user) => (
+                <SelectedUserTag
+                  key={user.id}
+                  user={user}
+                  onRemove={() =>
+                    setSelectedUsers((prev) =>
+                      prev.filter((u) => u.id !== user.id),
+                    )
+                  }
+                />
+              ))}
+            </div>
+          )}
+
+          <hr />
           <div className="h-96 overflow-y-auto">
             {isSuccess &&
               data.users.map((user) => (
@@ -121,6 +138,25 @@ const UserResult = ({ user, selected, onClick }: UserResultProps) => {
         </div>
       </div>
       {selected && <Check className="size-5 text-green-500" />}
+    </button>
+  );
+};
+
+interface SelectedUserTagProps {
+  // @ts-expect-error - This is intentional
+  user: UserResponse<DefaultStreamChatGenerics>;
+  onRemove: () => void;
+}
+
+const SelectedUserTag = ({ user, onRemove }: SelectedUserTagProps) => {
+  return (
+    <button
+      onClick={onRemove}
+      className="flex items-center gap-2 rounded-full border p-1 hover:bg-muted/50"
+    >
+      <UserAvatar avatarUrl={user.image} size={24} />
+      <p className="font-bold">{user.name}</p>
+      <X className="mx-2 size-5 text-muted-foreground" />
     </button>
   );
 };
