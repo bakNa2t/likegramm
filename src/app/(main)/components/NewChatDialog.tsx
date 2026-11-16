@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { UserResponse } from "stream-chat";
-import { useQuery } from "@tanstack/react-query";
-import { Check, SearchIcon, X } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Check, Loader2, SearchIcon, X } from "lucide-react";
 // @ts-expect-error - This is intentional
 import { DefaultStreamChatGenerics, useChatContext } from "stream-chat-react";
 
@@ -60,6 +61,33 @@ export const NewChatDialog = ({
       ),
   });
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      // @ts-expect-error - This is intentional
+      const channel = client.channel("messaging", {
+        members: [loggedInUser.id, ...selectedUsers.map((u) => u.id)],
+        name:
+          selectedUsers.length > 1
+            ? loggedInUser.displayName +
+              ", " +
+              selectedUsers.map((u) => u.name).join(", ")
+            : undefined,
+      });
+      await channel.create();
+      return channel;
+    },
+    onSuccess: (channel) => {
+      setActiveChannel(channel);
+      onChatCreated();
+    },
+    onError: (error) => {
+      console.error("Error starting chat", error);
+      toast.error(
+        "An error occurred while starting the chat. Please try again.",
+      );
+    },
+  });
+
   return (
     <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="bg-card p-0">
@@ -110,6 +138,17 @@ export const NewChatDialog = ({
                   }}
                 />
               ))}
+            {isSuccess && !data.users.length && (
+              <p className="my-3 text-center text-muted-foreground">
+                No users found. Try searching for a different name or username.
+              </p>
+            )}
+            {isFetching && <Loader2 className="mx-auto my-3 animate-spin" />}
+            {isError && (
+              <p className="my-3 text-center text-destructive">
+                An error occurred while searching for users. Please try again.
+              </p>
+            )}
           </div>
         </div>
       </DialogContent>
