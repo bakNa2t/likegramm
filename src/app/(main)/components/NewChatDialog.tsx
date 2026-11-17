@@ -9,10 +9,12 @@ import { DefaultStreamChatGenerics, useChatContext } from "stream-chat-react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { UserAvatar } from "@/components/UserAvatar";
+import { LoadingButton } from "@/components/LoadingButton";
 
 import useDebounce from "@/hooks/useDebounce";
 import { useSession } from "./SessionProvider";
@@ -151,6 +153,16 @@ export const NewChatDialog = ({
             )}
           </div>
         </div>
+
+        <DialogFooter className="px-6 pb-6">
+          <LoadingButton
+            isLoading={mutation.isPending}
+            onClick={() => mutation.mutate()}
+            disabled={!selectedUsers.length}
+          >
+            Start Chat
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
