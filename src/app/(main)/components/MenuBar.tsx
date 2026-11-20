@@ -4,8 +4,10 @@ import { Bookmark, Home, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { NotificationButton } from "./NotificationButton";
+import { MessagesButton } from "./MessagesButton";
 
 import prisma from "@/lib/prisma";
+import streamServerClient from "@/lib/stream";
 
 interface MenuBarProps {
   className?: string;
@@ -16,12 +18,15 @@ export const MenuBar = async ({ className }: MenuBarProps) => {
 
   if (!user) return null;
 
-  const unreadNotificationsCount = prisma.notification.count({
-    where: {
-      recipientId: user.id,
-      read: false,
-    },
-  });
+  const [unreadNotificationsCount, unreadMessagesCount] = await Promise.all([
+    prisma.notification.count({
+      where: {
+        recipientId: user.id,
+        read: false,
+      },
+    }),
+    (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
+  ]);
 
   return (
     <div className={className}>
@@ -40,6 +45,8 @@ export const MenuBar = async ({ className }: MenuBarProps) => {
       <NotificationButton
         initialState={{ unreadCount: unreadNotificationsCount }}
       />
+
+      <MessagesButton initialState={{ unreadCount: unreadMessagesCount }} />
 
       <Button
         asChild
